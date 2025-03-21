@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit & Loss Test</title>
+    <link rel="stylesheet" href="profit-loss.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Profit & Loss Test</h1>
+        <button id="takeTestBtn">Take Test</button>
+
+        <!-- Test Settings -->
+        <div id="testSettings" class="settings-panel">
+            <label for="numQuestions">Number of Questions:</label>
+            <select id="numQuestions">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+            </select>
+
+            <label for="difficulty">Difficulty Level:</label>
+            <select id="difficulty">
+                <option value="easy">Easy (3 min/question)</option>
+                <option value="medium">Medium (2 min/question)</option>
+                <option value="hard">Hard (1 min/question)</option>
+            </select>
+
+            <button id="startTestBtn">Start Test</button>
+        </div>
+
+        <!-- Timer -->
+        <div id="timer">Time: <span id="timeLeft">00:00</span></div>
+
+        <!-- Carousel for Questions -->
+        <div class="carousel">
+            <div class="question-slide active">Q1: A trader sells an item for $150, making a profit of 25%. What was the cost price?</div>
+            <div class="question-slide">Q2: A shopkeeper gives 10% discount and still earns a profit of 15%. Find the marked price.</div>
+            <div class="question-slide">Q3: An article is sold for $800 at a loss of 20%. Find the cost price.</div>
+        </div>
+
+        <div class="nav-buttons">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script>document.getElementById("takeTestBtn").addEventListener("click", function() {
+        document.getElementById("testSettings").style.display = "block";
+    });
+    
+    document.getElementById("startTestBtn").addEventListener("click", function() {
+        let numQuestions = document.getElementById("numQuestions").value;
+        let difficulty = document.getElementById("difficulty").value;
+    
+        let timePerQuestion = difficulty === "easy" ? 180 : difficulty === "medium" ? 120 : 60;
+        let totalTime = numQuestions * timePerQuestion;
+    
+        startTimer(totalTime);
+        document.getElementById("testSettings").style.display = "none";
+    });
+    
+    function startTimer(duration) {
+        let timerElement = document.getElementById("timeLeft");
+        let timeLeft = duration;
+    
+        let timerInterval = setInterval(function() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+    
+            timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert("Time's up!");
+            }
+            
+            timeLeft--;
+        }, 1000);
+    }
+    
+    // Carousel Logic
+    let currentSlide = 0;
+    const slides = document.querySelectorAll(".question-slide");
+    
+    document.getElementById("nextBtn").addEventListener("click", function() {
+        slides[currentSlide].classList.remove("active");
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add("active");
+    });
+    
+    document.getElementById("prevBtn").addEventListener("click", function() {
+        slides[currentSlide].classList.remove("active");
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        slides[currentSlide].classList.add("active");
+    });
+    </script>
+
+</body>
+</html>
