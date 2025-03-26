@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Quantitative Aptitude</title>
@@ -10,7 +11,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f4f7f9;
@@ -18,20 +19,20 @@
             text-align: center;
             padding: 20px;
         }
-
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-
+        
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
             color: #007bff;
             text-transform: uppercase;
         }
-
+        
         #searchBar {
             width: 100%;
             max-width: 500px;
@@ -44,17 +45,17 @@
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
+        
         #searchBar::placeholder {
             color: #aaa;
         }
-
+        
         .topics {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
-
+        
         .topic-box {
             background-color: #007bff;
             color: white;
@@ -71,41 +72,44 @@
             justify-content: center;
             height: 100px;
         }
-
+        
         .topic-box:hover {
             background-color: #0056b3;
             transform: translateY(-5px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
         }
-
         /* Responsive Design */
+        
         @media (max-width: 600px) {
             h1 {
                 font-size: 28px;
             }
-
             .topic-box {
                 font-size: 18px;
             }
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
         <h1>Quantitative Aptitude</h1>
         <input type="text" id="searchBar" placeholder="Search topics...">
-        
+
         <div class="topics">
-            <div class="topic-box" data-topic="profit and loss">Profit and Loss</div>
-            <div class="topic-box" data-topic="percentage">Percentage</div>
-            <div class="topic-box" data-topic="time and work">Time and Work</div>
-            <div class="topic-box" data-topic="probability">Probability</div>
-            <div class="topic-box" data-topic="simplification">Simplification</div>
-            <div class="topic-box" data-topic="time speed distance">Time, Speed & Distance</div>
-            <div class="topic-box" data-topic="ratio proportion">Ratio and Proportion</div>
-            <div class="topic-box" data-topic="number system">Number System</div>
-            <div class="topic-box" data-topic="algebra">Algebra</div>
+            <a href="taketest.html">
+                <div class="topic-box" data-topic="profit and loss">Profit and Loss</div><br>
+
+                <div class="topic-box" data-topic="percentage">Percentage</div><br>
+                <div class="topic-box" data-topic="time and work">Time and Work</div><br>
+                <div class="topic-box" data-topic="probability">Probability</div><br>
+                <div class="topic-box" data-topic="simplification">Simplification</div><br>
+                <div class="topic-box" data-topic="time speed distance">Time, Speed & Distance</div><br>
+                <div class="topic-box" data-topic="ratio proportion">Ratio and Proportion</div><br>
+                <div class="topic-box" data-topic="number system">Number System</div><br>
+                <div class="topic-box" data-topic="algebra">Algebra</div><br>
+            </a>
         </div>
     </div>
 
@@ -113,7 +117,7 @@
         document.getElementById("searchBar").addEventListener("keyup", function() {
             let filter = this.value.toLowerCase();
             let topics = document.querySelectorAll(".topic-box");
-    
+
             topics.forEach(topic => {
                 let topicText = topic.getAttribute("data-topic").toLowerCase();
                 if (topicText.includes(filter)) {
@@ -126,4 +130,5 @@
     </script>
 
 </body>
+
 </html>
