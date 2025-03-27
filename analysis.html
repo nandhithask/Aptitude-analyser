@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Analysis | Aptitude Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            /* Blue color palette */
+            --blue-50: #f0f9ff;
+            --blue-100: #e0f2fe;
+            --blue-200: #bae6fd;
+            --blue-300: #7dd3fc;
+            --blue-400: #38bdf8;
+            --blue-500: #0ea5e9;
+            --blue-600: #0284c7;
+            --blue-700: #0369a1;
+            --blue-800: #075985;
+            --blue-900: #0c4a6e;
+            
+            /* Additional colors */
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #ffffff;
+            --dark: #1e293b;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* Border radius */
+            --rounded-sm: 0.25rem;
+            --rounded: 0.5rem;
+            --rounded-md: 0.75rem;
+            --rounded-lg: 1rem;
+            --rounded-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--blue-50);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 0;
+            background: linear-gradient(135deg, var(--blue-600), var(--blue-400));
+            border-radius: var(--rounded-lg);
+            color: white;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .analysis-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .analysis-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .summary-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--light);
+            border-radius: var(--rounded-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card h2, .card h3 {
+            color: var(--blue-800);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            border-bottom: 2px solid var(--blue-100);
+            padding-bottom: 0.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+        }
+
+        .card h2 i, .card h3 i {
+            font-size: 1.1em;
+        }
+
+        .score-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-circle {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin-bottom: 1rem;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: var(--blue-100);
+            stroke-width: 10;
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: var(--blue-600);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.8s ease-in-out;
+        }
+
+        .circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .circle-text h2 {
+            font-size: 2.75rem;
+            color: var(--blue-700);
+            margin-bottom: 0;
+            font-weight: 700;
+            border: none;
+            padding: 0;
+        }
+
+        .circle-text p {
+            color: var(--blue-500);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .test-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .test-info h3 {
+            color: var(--blue-800);
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .test-info p {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--blue-50);
+            border-radius: var(--rounded);
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--blue-100);
+        }
+
+        .stat-card h3 {
+            font-size: 1.75rem;
+            color: var(--blue-700);
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            color: var(--blue-500);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .topic-performance {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .topic-item {
+            margin-bottom: 0;
+        }
+
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .topic-name {
+            font-weight: 500;
+            color: var(--blue-800);
+        }
+
+        .topic-score {
+            font-weight: 600;
+            color: var(--blue-600);
+        }
+
+        .progress-container {
+            height: 8px;
+            background: var(--blue-100);
+            border-radius: var(--rounded-full);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue-400), var(--blue-600));
+            border-radius: var(--rounded-full);
+            transition: width 0.6s ease;
+        }
+
+        .tab-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--blue-100);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray-500);
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: var(--blue-600);
+        }
+
+        .tab.active {
+            color: var(--blue-700);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--blue-500);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .question-item {
+            background: var(--light);
+            border-radius: var(--rounded);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .question-item:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-1px);
+        }
+
+        .question-item.correct {
+            border-left-color: var(--success);
+        }
+
+        .question-item.incorrect {
+            border-left-color: var(--danger);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            align-items: center;
+        }
+
+        .question-topic {
+            font-size: 0.75rem;
+            background: var(--blue-100);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--rounded-full);
+            color: var(--blue-700);
+            font-weight: 500;
+        }
+
+        .question-difficulty {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .question-difficulty.easy {
+            color: var(--success);
+        }
+
+        .question-difficulty.medium {
+            color: var(--warning);
+        }
+
+        .question-difficulty.hard {
+            color: var(--danger);
+        }
+
+        .question-text {
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .answer-section {
+            background: var(--blue-50);
+            padding: 1rem;
+            border-radius: var(--rounded-sm);
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--blue-100);
+        }
+
+        .answer-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .answer-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: var(--blue-700);
+        }
+
+        .correct-answer {
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .incorrect-answer {
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        .explanation {
+            padding: 1rem;
+            background-color: var(--blue-50);
+            border-radius: var(--rounded-sm);
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--blue-300);
+        }
+
+        .explanation strong {
+            color: var(--blue-700);
+        }
+
+        .time-taken {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .time-taken i {
+            font-size: 0.9em;
+        }
+
+        .focus-area, .strength-area {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--rounded);
+            transition: all 0.2s;
+        }
+
+        .focus-area {
+            background: rgba(239, 68, 68, 0.05);
+            border-left: 3px solid var(--danger);
+        }
+
+        .focus-area:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .strength-area {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid var(--success);
+        }
+
+        .strength-area:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .focus-icon, .strength-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .focus-icon {
+            color: var(--danger);
+        }
+
+        .strength-icon {
+            color: var(--success);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            background: var(--blue-600);
+            color: white;
+            border: none;
+            border-radius: var(--rounded);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 1rem;
+            font-weight: 500;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            background: var(--blue-700);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-block {
+            display: flex;
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--blue-600);
+            border: 1px solid var(--blue-300);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--blue-50);
+            color: var(--blue-700);
+            border-color: var(--blue-400);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--blue-300);
+        }
+
+        /* Floating badge */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--rounded-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-blue {
+            background: var(--blue-100);
+            color: var(--blue-700);
+        }
+
+        .badge-green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            
+            .tab {
+                border-bottom: 2px solid var(--blue-100);
+            }
+            
+            .tab.active::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test Performance Analysis</h1>
+            <p id="test-name">Quantitative Aptitude Mock Test</p>
+        </div>
+
+        <div class="analysis-container">
+            <div class="summary-section">
+                <div class="card">
+                    <div class="score-display">
+                        <div class="score-circle">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg"
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                                <path class="circle-progress"
+                                    stroke-dasharray="0, 100"
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                            </svg>
+                            <div class="circle-text">
+                                <h2 id="score-percent">0%</h2>
+                                <p>Accuracy</p>
+                            </div>
+                        </div>
+                        <div class="test-info">
+                            <h3 id="test-title">Quantitative Aptitude</h3>
+                            <p id="test-date">Completed on May 15, 2023</p>
+                            <p id="test-user">By <span class="badge badge-blue">demo_user</span></p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="total-questions">0</h3>
+                            <p>Total Questions</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="correct-answers">0</h3>
+                            <p>Correct</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="incorrect-answers">0</h3>
+                            <p>Incorrect</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="avg-time">0s</h3>
+                            <p>Avg Time/Q</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-chart-pie"></i> Topic Performance</h2>
+                    <div class="topic-performance" id="topic-performance">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-layer-group"></i> Difficulty Analysis</h2>
+                    <div class="topic-performance" id="difficulty-performance">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <a href="#" class="btn btn-block">
+                    <i class="fas fa-redo"></i> Take Another Test
+                </a>
+            </div>
+
+            <div class="detailed-analysis">
+                <div class="card">
+                    <div class="tab-container">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="incorrect">
+                                <i class="fas fa-times-circle"></i> Incorrect Answers
+                                <span class="badge badge-red" id="incorrect-count">0</span>
+                            </div>
+                            <div class="tab" data-tab="correct">
+                                <i class="fas fa-check-circle"></i> Correct Answers
+                                <span class="badge badge-green" id="correct-count">0</span>
+                            </div>
+                            <div class="tab" data-tab="all">
+                                <i class="fas fa-list-ul"></i> All Questions
+                            </div>
+                        </div>
+
+                        <div class="tab-content active" id="incorrect-tab">
+                            <div class="questions-list" id="incorrect-questions">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="correct-tab">
+                            <div class="questions-list" id="correct-questions">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="all-tab">
+                            <div class="questions-list" id="all-questions">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-bullseye"></i> Focus Areas</h2>
+                    <div id="improvement-areas">
+                        <!-- Will be populated by JavaScript -->
+                        <div class="empty-state">
+                            <i class="fas fa-check-double"></i>
+                            <p>No specific areas need improvement. Keep up the good work!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-star"></i> Your Strengths</h2>
+                    <div id="strength-areas">
+                        <!-- Will be populated by JavaScript -->
+                        <div class="empty-state">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>Review your answers to identify your strong areas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced mock data with more questions
+        const testData = {
+            attempt: {
+                attempt_id: 1,
+                test_name: "Quantitative Aptitude Mock Test",
+                username: "demo_user",
+                total_questions: 20,
+                score: 15,
+                start_time: "2023-05-15T10:00:00",
+                end_time: "2023-05-15T10:30:00"
+            },
+            answers: [
+                {
+                    question_id: 1,
+                    topic: "Arithmetic",
+                    difficulty: "easy",
+                    question_text: "What is 15% of 200?",
+                    user_answer: "30",
+                    is_correct: true,
+                    time_taken: 45,
+                    correct_answer: "30",
+                    explanation: "15% of 200 = (15/100) * 200 = 30"
+                },
+                {
+                    question_id: 2,
+                    topic: "Algebra",
+                    difficulty: "medium",
+                    question_text: "Solve for x: 2x + 5 = 15",
+                    user_answer: "7",
+                    is_correct: false,
+                    time_taken: 68,
+                    correct_answer: "5",
+                    explanation: "2x + 5 = 15 → 2x = 10 → x = 5"
+                },
+                {
+                    question_id: 3,
+                    topic: "Geometry",
+                    difficulty: "hard",
+                    question_text: "What is the area of a circle with radius 7cm?",
+                    user_answer: "154 cm²",
+                    is_correct: true,
+                    time_taken: 92,
+                    correct_answer: "154 cm²",
+                    explanation: "Area = πr² = (22/7)*7*7 = 154 cm²"
+                },
+                {
+                    question_id: 4,
+                    topic: "Arithmetic",
+                    difficulty: "medium",
+                    question_text: "A train travels 300km in 5 hours. What is its speed?",
+                    user_answer: "55 km/h",
+                    is_correct: false,
+                    time_taken: 75,
+                    correct_answer: "60 km/h",
+                    explanation: "Speed = Distance/Time = 300/5 = 60 km/h"
+                },
+                {
+                    question_id: 5,
+                    topic: "Number Theory",
+                    difficulty: "easy",
+                    question_text: "What is the smallest prime number?",
+                    user_answer: "2",
+                    is_correct: true,
+                    time_taken: 30,
+                    correct_answer: "2",
+                    explanation: "2 is the smallest and the only even prime number."
+                },
+                {
+                    question_id: 6,
+                    topic: "Data Interpretation",
+                    difficulty: "hard",
+                    question_text: "If a pie chart shows 40% for category A, what is the angle of the sector?",
+                    user_answer: "120°",
+                    is_correct: false,
+                    time_taken: 110,
+                    correct_answer: "144°",
+                    explanation: "Angle = (Percentage/100) * 360 = 0.4 * 360 = 144°"
+                },
+                {
+                    question_id: 7,
+                    topic: "Probability",
+                    difficulty: "medium",
+                    question_text: "What is the probability of getting heads in a coin toss?",
+                    user_answer: "1/2",
+                    is_correct: true,
+                    time_taken: 25,
+                    correct_answer: "1/2",
+                    explanation: "A fair coin has two equally likely outcomes: heads or tails."
+                },
+                {
+                    question_id: 8,
+                    topic: "Algebra",
+                    difficulty: "hard",
+                    question_text: "Factorize: x² - 5x + 6",
+                    user_answer: "(x-2)(x-3)",
+                    is_correct: true,
+                    time_taken: 85,
+                    correct_answer: "(x-2)(x-3)",
+                    explanation: "Find two numbers that multiply to 6 and add to -5: -2 and -3."
+                }
+            ]
+        };
+
+        // Process test data and calculate metrics
+        function processTestData(data) {
+            const result = { ...data };
+            
+            // Calculate basic stats
+            result.correctCount = data.answers.filter(a => a.is_correct).length;
+            result.incorrectCount = data.answers.filter(a => !a.is_correct).length;
+            result.accuracy = (result.correctCount / data.attempt.total_questions) * 100;
+            
+            // Calculate time taken
+            const startTime = new Date(data.attempt.start_time);
+            const endTime = new Date(data.attempt.end_time);
+            result.totalTimeTaken = (endTime - startTime) / 1000; // in seconds
+            result.avgTimePerQuestion = result.totalTimeTaken / data.attempt.total_questions;
+            
+            // Calculate topic performance
+            result.topics = {};
+            data.answers.forEach(answer => {
+                if (!result.topics[answer.topic]) {
+                    result.topics[answer.topic] = {
+                        total: 0,
+                        correct: 0,
+                        time: 0
+                    };
+                }
+                result.topics[answer.topic].total++;
+                result.topics[answer.topic].correct += answer.is_correct ? 1 : 0;
+                result.topics[answer.topic].time += answer.time_taken;
+            });
+            
+            // Calculate difficulty performance
+            result.difficulties = {
+                easy: { total: 0, correct: 0, time: 0 },
+                medium: { total: 0, correct: 0, time: 0 },
+                hard: { total: 0, correct: 0, time: 0 }
+            };
+            
+            data.answers.forEach(answer => {
+                result.difficulties[answer.difficulty].total++;
+                result.difficulties[answer.difficulty].correct += answer.is_correct ? 1 : 0;
+                result.difficulties[answer.difficulty].time += answer.time_taken;
+            });
+            
+            // Identify areas to improve (topics with accuracy < 50%)
+            result.improvementAreas = Object.entries(result.topics)
+                .filter(([topic, stats]) => (stats.correct / stats.total) < 0.5)
+                .map(([topic]) => topic);
+            
+            // Identify strengths (topics with accuracy >= 80%)
+            result.strengthAreas = Object.entries(result.topics)
+                .filter(([topic, stats]) => (stats.correct / stats.total) >= 0.8)
+                .map(([topic]) => topic);
+            
+            return result;
+        }
+
+        // Update the UI with test data
+        function updateUI(data) {
+            // Basic info
+            document.getElementById('test-name').textContent = data.attempt.test_name;
+            document.getElementById('test-title').textContent = data.attempt.test_name;
+            document.getElementById('test-date').textContent = Completedon${new Date(data.attempt.start_time).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })};
+            document.getElementById('test-user').innerHTML = By <span class="badge badge-blue">${data.attempt.username}</span>;
+            
+            // Score circle animation
+            document.getElementById('score-percent').textContent = ${Math.round(data.accuracy)}%;
+            const circle = document.querySelector('.circle-progress');
+            const circumference = 2 * Math.PI * 15.9155;
+            const offset = circumference - (data.accuracy / 100) * circumference;
+            circle.style.strokeDasharray = ${circumference} ${circumference};
+            circle.style.strokeDashoffset = offset;
+            
+            // Stats
+            document.getElementById('total-questions').textContent = data.attempt.total_questions;
+            document.getElementById('correct-answers').textContent = data.correctCount;
+            document.getElementById('incorrect-answers').textContent = data.incorrectCount;
+            document.getElementById('avg-time').textContent = ${Math.round(data.avgTimePerQuestion)}s;
+            
+            // Update tab badges
+            document.getElementById('incorrect-count').textContent = data.incorrectCount;
+            document.getElementById('correct-count').textContent = data.correctCount;
+            
+            // Topic performance
+            const topicPerformanceEl = document.getElementById('topic-performance');
+            topicPerformanceEl.innerHTML = '';
+            
+            if (Object.keys(data.topics).length === 0) {
+                topicPerformanceEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <p>No topic data available</p>
+                    </div>
+                `;
+            } else {
+                for (const [topic, stats] of Object.entries(data.topics)) {
+                    const accuracy = (stats.correct / stats.total) * 100;
+                    const avgTime = stats.time / stats.total;
+                    
+                    const topicEl = document.createElement('div');
+                    topicEl.className = 'topic-item';
+                    topicEl.innerHTML = `
+                        <div class="topic-header">
+                            <span class="topic-name">${topic}</span>
+                            <span class="topic-score">${Math.round(accuracy)}%</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: ${accuracy}%"></div>
+                        </div>
+                        <div class="time-taken">
+                            <i class="far fa-clock"></i> Avg time: ${Math.round(avgTime)}s (${stats.correct}/${stats.total} correct)
+                        </div>
+                    `;
+                    
+                    topicPerformanceEl.appendChild(topicEl);
+                }
+            }
+            
+            // Difficulty performance
+            const difficultyPerformanceEl = document.getElementById('difficulty-performance');
+            difficultyPerformanceEl.innerHTML = '';
+            
+            for (const [difficulty, stats] of Object.entries(data.difficulties)) {
+                if (stats.total === 0) continue;
+                
+                const accuracy = (stats.correct / stats.total) * 100;
+                const avgTime = stats.time / stats.total;
+                
+                const difficultyEl = document.createElement('div');
+                difficultyEl.className = 'topic-item';
+                difficultyEl.innerHTML = `
+                    <div class="topic-header">
+                        <span class="topic-name">${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</span>
+                        <span class="topic-score">${Math.round(accuracy)}%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-fill" style="width: ${accuracy}%"></div>
+                    </div>
+                    <div class="time-taken">
+                        <i class="far fa-clock"></i> Avg time: ${Math.round(avgTime)}s (${stats.correct}/${stats.total} correct)
+                    </div>
+                `;
+                
+                difficultyPerformanceEl.appendChild(difficultyEl);
+            }
+            
+            // Questions by tab
+            renderQuestions(data.answers.filter(q => !q.is_correct), 'incorrect-questions');
+            renderQuestions(data.answers.filter(q => q.is_correct), 'correct-questions');
+            renderQuestions(data.answers, 'all-questions');
+            
+            // Improvement areas
+            const improvementEl = document.getElementById('improvement-areas');
+            improvementEl.innerHTML = '';
+            
+            if (data.improvementAreas.length === 0) {
+                improvementEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-double"></i>
+                        <p>No specific areas need improvement. Keep up the good work!</p>
+                    </div>
+                `;
+            } else {
+                data.improvementAreas.forEach(area => {
+                    const accuracy = Math.round((data.topics[area].correct / data.topics[area].total) * 100);
+                    
+                    const areaEl = document.createElement('div');
+                    areaEl.className = 'focus-area';
+                    areaEl.innerHTML = `
+                        <i class="fas fa-exclamation-circle focus-icon"></i>
+                        <div>
+                            <strong>${area}</strong>
+                            <div class="time-taken">Accuracy: ${accuracy}% (${data.topics[area].correct}/${data.topics[area].total})</div>
+                        </div>
+                    `;
+                    improvementEl.appendChild(areaEl);
+                });
+            }
+            
+            // Strength areas
+            const strengthEl = document.getElementById('strength-areas');
+            strengthEl.innerHTML = '';
+            
+            if (data.strengthAreas.length === 0) {
+                strengthEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-lightbulb"></i>
+                        <p>Review your answers to identify your strong areas</p>
+                    </div>
+                `;
+            } else {
+                data.strengthAreas.forEach(area => {
+                    const accuracy = Math.round((data.topics[area].correct / data.topics[area].total) * 100);
+                    
+                    const areaEl = document.createElement('div');
+                    areaEl.className = 'strength-area';
+                    areaEl.innerHTML = `
+                        <i class="fas fa-check-circle strength-icon"></i>
+                        <div>
+                            <strong>${area}</strong>
+                            <div class="time-taken">Accuracy: ${accuracy}% (${data.topics[area].correct}/${data.topics[area].total})</div>
+                        </div>
+                    `;
+                    strengthEl.appendChild(areaEl);
+                });
+            }
+        }
+
+        // Render questions for a tab
+        function renderQuestions(questions, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (questions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No questions found in this category.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            questions.forEach(q => {
+                const questionEl = document.createElement('div');
+                questionEl.className = question-item ${q.is_correct ? 'correct' : 'incorrect'};
+                
+                questionEl.innerHTML = `
+                    <div class="question-header">
+                        <span class="question-topic">${q.topic}</span>
+                        <span class="question-difficulty ${q.difficulty}">${q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1)}</span>
+                    </div>
+                    <div class="question-text">${q.question_text}</div>
+                    <div class="answer-section">
+                        <div class="answer-row">
+                            <span class="answer-label">Your Answer:</span>
+                            <span class="${q.is_correct ? 'correct-answer' : 'incorrect-answer'}">${q.user_answer}</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-label">Correct Answer:</span>
+                            <span class="correct-answer">${q.correct_answer}</span>
+                        </div>
+                    </div>
+                    ${q.explanation ? <div class="explanation"><strong>Explanation:</strong> ${q.explanation}</div> : ''}
+                    <div class="time-taken">
+                        <i class="far fa-clock"></i> Time taken: ${q.time_taken} seconds
+                        ${q.time_taken > 120 ? '<span class="badge badge-red">Too slow</span>' : ''}
+                        ${q.time_taken < 30 ? '<span class="badge badge-green">Fast!</span>' : ''}
+                    </div>
+                `;
+                
+                container.appendChild(questionEl);
+            });
+        }
+
+        // Tab switching functionality
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(${tabId}-tab).classList.add('active');
+                });
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            const processedData = processTestData(testData);
+            updateUI(processedData);
+            setupTabs();
+            
+            // In a real implementation, you would fetch data from your backend:
+            // const attemptId = new URLSearchParams(window.location.search).get('attemptId');
+            // fetch(/api/analysis/${attemptId})
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         const processedData = processTestData(data);
+            //         updateUI(processedData);
+            //     })
+            //     .catch(error => console.error('Error fetching analysis:', error));
+        });
+    </script>
+</body>
+</html>

@@ -118,22 +118,35 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        /* Add these new styles for question states */
+        
+        /* Enhanced question state indicators */
+        .question-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 5px;
+        }
         
         .question-circle.not-visited {
             background-color: #e9ecef;
             color: #333;
+            border: 1px solid #adb5bd;
         }
         
         .question-circle.answered {
             background-color: #28a745;
-            /* Green for saved answers */
             color: white;
         }
         
         .question-circle.skipped {
             background-color: #ffc107;
-            /* Yellow for skipped questions */
             color: white;
         }
         
@@ -141,8 +154,13 @@
             border: 3px solid #007bff;
             font-weight: bold;
             transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
         }
-        /* Remove the old .saved and .skipped classes as we'll use .answered and .skipped */
+        
+        .question-circle:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
         
         .navigation-section {
             flex: 1;
@@ -157,40 +175,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-        }
-        
-        .question-circle {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
             justify-content: center;
-            align-items: center;
-            background-color: #e9ecef;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .question-circle:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-        /* .saved {
-            background-color: #28a745;
-            color: white;
-        }
-        
-        .skipped {
-            background-color: #ffc107;
-            color: white;
-        } */
-        
-        .current {
-            border: 3px solid #007bff;
-            font-weight: bold;
-            transform: scale(1.1);
         }
         
         .disable-interaction {
@@ -238,11 +223,50 @@
             color: white;
             border-color: #007bff;
         }
+        
+        .legend {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-not-visited {
+            background-color: #e9ecef;
+        }
+        
+        .legend-answered {
+            background-color: #28a745;
+        }
+        
+        .legend-skipped {
+            background-color: #ffc107;
+        }
+        
+        .legend-current {
+            border: 2px solid #007bff;
+            background-color: white;
+        }
     </style>
 </head>
 
 <body>
-
+<link rel="icon" href="data:,">
     <div class="container">
         <div class="header-section">
             <div id="timer">Time Left: 60:00</div>
@@ -254,14 +278,33 @@
                 <div id="questionBox" class="question-box"></div>
                 <div id="optionsContainer" class="options-container"></div>
                 <div class="buttons">
-                    <button class="save-btn" onclick="saveAnswer()">Save</button>
-                    <button class="skip-btn" onclick="skipQuestion()">Skip</button>
+                    <button class="btn btn-primary save-btn" onclick="saveAnswer()">Save</button>
+                    <button class="btn btn-warning skip-btn" onclick="skipQuestion()">Skip</button>
                 </div>
             </div>
 
             <div class="navigation-section">
-                <h3 class="mb-4">Question Navigator</h3>
+                <h3 class="mb-4 text-center">Question Navigator</h3>
                 <div id="questionIndicators" class="question-indicators"></div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color legend-not-visited"></div>
+                        <span>Not Visited</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-answered"></div>
+                        <span>Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-skipped"></div>
+                        <span>Skipped</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-current"></div>
+                        <span>Current</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -298,138 +341,188 @@
             createQuestionNavigator();
         });
 
+
         // Fetch questions from MySQL database via PHP API
-        function fetchQuestions() {
-            // In a real implementation, you would make a fetch request to your PHP backend
-            // For now, we'll simulate with sample questions
-            console.log(`Fetching ${questionCount} questions for level: ${level}`);
+      // Fetch questions from MySQL database via Node.js API
+async function fetchQuestions() {
+    try {
+        const response = await fetch(`http://localhost:3000/api/questions?count=${questionCount}&level=${level}`);
 
-            // Simulate API call delay
-            setTimeout(() => {
-                // Generate sample questions based on the requested count and level
-                questions = generateSampleQuestions(questionCount, level);
+        if (!response.ok) throw new Error("Failed to fetch questions");
 
-                // Display the first question
-                displayQuestion(currentQuestionIndex);
-            }, 500);
+        const data = await response.json();
+        questions = data.questions;  // Accessing the 'questions' array correctly
+        console.log("Fetched Questions:", questions);
+
+        if (questions.length > 0) {
+            renderQuestion();
+        } else {
+            questionBox.innerHTML = "<p>No questions available at the moment.</p>";
+        }
+    } catch (error) {
+        console.error("Error fetching questions:", error);
+        questionBox.innerHTML = "<p>Failed to load questions. Please try again later.</p>";
+    }
+}
+
+
+// Display a question
+function displayQuestion(index) {
+    if (index < 0 || index >= questions.length) return;
+
+    currentQuestionIndex = index;
+    const question = questions[index];
+
+    // Update question text
+    questionBox.innerHTML = `<strong>Question ${index + 1}:</strong> ${question.text}`;
+
+    // Clear previous options
+    optionsContainer.innerHTML = '';
+
+    // Render options dynamically
+    question.options.forEach((option, i) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        if (answers[index] !== undefined && answers[index].selectedOption === i) {
+            optionElement.classList.add('selected');
+        }
+        optionElement.textContent = `${String.fromCharCode(65 + i)}. ${option}`;
+        optionElement.onclick = () => selectOption(i);
+        optionsContainer.appendChild(optionElement);
+    });
+
+    // Update question navigator status
+    updateQuestionNavigator();
+}
+
+function updateQuestionIndicators() {
+    const questionIndicators = document.getElementById('questionIndicators');
+    questionIndicators.innerHTML = ''; // Clear previous indicators
+
+    for (let i = 0; i < questions.length; i++) {
+        const indicator = document.createElement('div');
+        indicator.classList.add('question-circle');
+
+        // Apply class based on the question's state
+        if (i === currentQuestionIndex) {
+            indicator.classList.add('current');
+        } else if (answers[i] !== undefined) {
+            indicator.classList.add('answered');
+        } else {
+            indicator.classList.add('not-visited');
         }
 
-        // Generate sample questions (replace with actual API call in production)
-        function generateSampleQuestions(count, difficulty) {
-            const sampleQuestions = [];
-            const difficulties = {
-                'beginner': ['easy', 'medium'],
-                'pro': ['medium', 'hard']
-            };
+        indicator.innerText = i + 1; // Number each question
+        indicator.onclick = () => navigateToQuestion(i); // Navigate on click
+        questionIndicators.appendChild(indicator);
+    }
+}
 
-            const levels = difficulties[difficulty] || ['easy', 'medium'];
+function displayResult() {
+    questionBox.innerHTML = '';
+    optionsContainer.innerHTML = '';
+    result.innerHTML = `<h2>Quiz Completed!</h2><p>Your score is: ${score} out of ${questions.length}</p>`;
+}
 
-            for (let i = 1; i <= count; i++) {
-                const level = levels[Math.floor(Math.random() * levels.length)];
-                sampleQuestions.push({
-                    id: i,
-                    text: `Sample question ${i} (${level} difficulty): What is ${i} + ${Math.floor(Math.random() * 10)}?`,
-                    options: [
-                        `${i + 1}`,
-                        `${i + 2}`,
-                        `${i + 3}`,
-                        `${i + 4}`
-                    ],
-                    correctAnswer: Math.floor(Math.random() * 4), // 0-3
-                    difficulty: level
-                });
-            }
-            return sampleQuestions;
-        }
 
-        // Display a question
-        // Modified displayQuestion function to update navigator
-        function displayQuestion(index) {
-            if (index < 0 || index >= questions.length) return;
+function renderQuestion() {
+    const question = questions[currentQuestionIndex];
+    questionBox.innerHTML = question.text;
 
-            currentQuestionIndex = index;
-            const question = questions[index];
+    // Reset options and render the new ones
+    optionsContainer.innerHTML = '';
+    question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.classList.add('option');
+        optionDiv.innerText = option;
+        optionDiv.onclick = () => selectOption(index);
+        optionsContainer.appendChild(optionDiv);
+    });
 
-            // Update question text
-            questionBox.innerHTML = `<strong>Question ${index + 1}:</strong> ${question.text}`;
+    // Update the question indicators after rendering
+    updateQuestionIndicators();
+}
 
-            // Clear previous options
-            optionsContainer.innerHTML = '';
 
-            // Add new options
-            question.options.forEach((option, i) => {
-                const optionElement = document.createElement('div');
-                optionElement.className = 'option';
-                if (answers[index] !== undefined && answers[index].selectedOption === i) {
-                    optionElement.classList.add('selected');
-                }
-                optionElement.textContent = `${String.fromCharCode(65 + i)}. ${option}`;
-                optionElement.onclick = () => selectOption(i);
-                optionsContainer.appendChild(optionElement);
-            });
 
-            // Update question navigator
-            updateQuestionNavigator();
-        }
 
-        // Modified saveAnswer function
-        function saveAnswer() {
-            if (answers[currentQuestionIndex] !== undefined && answers[currentQuestionIndex].selectedOption !== undefined) {
-                answers[currentQuestionIndex].saved = true;
-                answers[currentQuestionIndex].skipped = false;
-                updateQuestionNavigator();
-                moveToNextQuestion();
-            } else {
-                alert('Please select an answer before saving.');
-            }
-        }
+  function selectOption(selectedIndex) {
+    // Clear previous selections
+    const options = document.querySelectorAll('.option');
+    options.forEach(opt => opt.classList.remove('selected'));
+    
+    // Mark selected option
+    options[selectedIndex].classList.add('selected');
+    
+    // Store the selected answer
+    if (!answers[currentQuestionIndex]) {
+        answers[currentQuestionIndex] = {};
+    }
+    answers[currentQuestionIndex].selectedOption = selectedIndex;
+    answers[currentQuestionIndex].saved = false;
+    answers[currentQuestionIndex].skipped = false;
+}
 
-        // Modified skipQuestion function
+
+
+       function saveAnswer() {
+    if (answers[currentQuestionIndex]?.selectedOption !== undefined) {
+        answers[currentQuestionIndex].saved = true;
+        answers[currentQuestionIndex].skipped = false;
+        updateQuestionNavigator();
+        moveToNextQuestion();
+    } else {
+        alert('Please select an answer before saving.');
+    }
+}
+
         function skipQuestion() {
             answers[currentQuestionIndex] = {
                 skipped: true,
-                saved: false
+                saved: false,
+                selectedOption: undefined
             };
             updateQuestionNavigator();
             moveToNextQuestion();
         }
 
-        // Enhanced updateQuestionNavigator function
-        function updateQuestionNavigator() {
-            const circles = document.querySelectorAll('.question-circle');
-            circles.forEach((circle, i) => {
-                // Reset classes
-                circle.className = 'question-circle';
-
-                // Add appropriate state classes
-                if (answers[i] !== undefined) {
-                    if (answers[i].saved) {
-                        circle.classList.add('answered');
-                    } else if (answers[i].skipped) {
-                        circle.classList.add('skipped');
-                    }
-                } else {
-                    circle.classList.add('not-visited');
-                }
-
-                // Highlight current question
-                if (i === currentQuestionIndex) {
-                    circle.classList.add('current');
-                }
-            });
+        function moveToNextQuestion() {
+        let nextIndex = currentQuestionIndex + 1;
+        while (nextIndex < questions.length && answers[nextIndex]?.saved) {
+            nextIndex++;
         }
+        if (nextIndex >= questions.length) nextIndex = 0; // Loop back to start
+        displayQuestion(nextIndex);
+    }
 
-        // Modified createQuestionNavigator function
+
+
+
+       function updateQuestionNavigator() {
+        const circles = document.querySelectorAll('.question-circle');
+        circles.forEach((circle, i) => {
+            circle.className = 'question-circle'; // Reset classes
+            if (answers[i]?.saved) {
+                circle.classList.add('answered');
+            } else if (answers[i]?.skipped) {
+                circle.classList.add('skipped');
+            }
+            if (i === currentQuestionIndex) {
+                circle.classList.add('current'); // Highlight current question
+            }
+        });
+    }
+
+
         function createQuestionNavigator() {
             questionIndicators.innerHTML = '';
-            for (let i = 0; i < questions.length; i++) {
+            for (let i = 0; i < questionCount; i++) {
                 const circle = document.createElement('div');
                 circle.className = 'question-circle not-visited';
                 circle.textContent = i + 1;
                 circle.onclick = () => displayQuestion(i);
                 questionIndicators.appendChild(circle);
             }
-            updateQuestionNavigator();
         }
 
         // Start the countdown timer
@@ -447,39 +540,31 @@
         }
 
         // Update the timer display
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerElement.textContent = `Time Left: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+       function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerElement.textContent = `Time Left: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        if (timeLeft <= 300) timerElement.style.color = '#ff0000'; // Warning color when time is low
+    }
 
-            // Change color when time is running low
-            if (timeLeft <= 300) { // 5 minutes or less
-                timerElement.style.color = '#ff0000';
-                timerElement.style.animation = 'blink 1s infinite';
-            }
-        }
 
         // Submit the test
-        function submitTest(timeExpired = false) {
-            clearInterval(timerInterval);
-
-            if (timeExpired) {
-                alert('Time has expired! Your test has been automatically submitted.');
-            } else {
-                if (!confirm('Are you sure you want to submit the test?')) {
-                    // If user cancels, restart the timer
-                    startTimer();
-                    return;
-                }
-            }
-
-
-            // Redirect to results page or show results
-            alert(`Test submitted!`);
-
-            // Here you would typically redirect to a results page
-            // window.location.href = `results.html?score=${score.correct}&total=${questions.length}`;
+      // Submit the test
+function submitTest(timeExpired = false) {
+    clearInterval(timerInterval);
+    if (timeExpired) alert('Time has expired! Your test has been automatically submitted.');
+    
+    // Calculate score
+    let score = 0;
+    questions.forEach((q, i) => {
+        if (answers[i]?.saved && answers[i].selectedOption === q.correctAnswer) {
+            score++;
         }
+    });
+
+    // Redirect to results page with score in URL
+    window.location.href = `results.html?score=${score}&total=${questions.length}&level=${level}`;
+}
     </script>
 </body>
 
